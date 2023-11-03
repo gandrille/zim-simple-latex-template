@@ -1,0 +1,160 @@
+% Use pdflatex to compile this file
+\documentclass[a4paper, 11pt]{article}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage[mathletters]{ucs}  % Math symbols
+\usepackage{amssymb}           % Math symbols
+\usepackage{amsmath}           % Math symbols
+\usepackage{wasysym}           % Symbols
+
+\usepackage{graphicx}
+\usepackage[export]{adjustbox} % for max width support
+
+\usepackage[normalem]{ulem}    % Underline, strike, and more 
+\usepackage{enumerate}
+\usepackage{xcolor}
+
+
+% Global layout
+% =============
+
+% Page margins
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+ }
+
+
+% Title and TOC formatting
+% ========================
+
+% Title colors
+\usepackage{sectsty}
+\definecolor{sectioncolor}{RGB}{225,30,56}
+\definecolor{subsectioncolor}{RGB}{66,141,181}
+\sectionfont{\huge \color{sectioncolor}}
+\subsectionfont{\Large \color{subsectioncolor}}
+
+% Page break before each section
+\usepackage{titlesec}
+\newcommand\sectionbreak{\clearpage}
+
+% Remove section numbering (NOT in toc)
+\makeatletter
+\renewcommand{\@seccntformat}[1]{}
+\makeatother
+
+% TOC details (only sections)
+\setcounter{tocdepth}{1}
+
+% Remove numberring in TOC
+\makeatletter
+\let\latexl@section\l@section
+\def\l@section#1#2{\begingroup\let\numberline\@gobble\latexl@section{#1}{#2}\endgroup}
+\makeatother
+
+% Remove TOC section which is automaticaly added
+\makeatletter
+\renewcommand\tableofcontents{%
+    \@starttoc{toc}%
+}
+\makeatother
+
+
+% Listings
+% ========
+
+\usepackage{listings}
+\usepackage{realboxes}
+\definecolor{backcolour}{RGB}{247,248,249}
+\definecolor{bordercolour}{RGB}{187,187,187}
+\lstset{ %
+  backgroundcolor=\color{backcolour}, 
+  rulecolor=\color{bordercolour},
+  basicstyle=\ttfamily,               % the size of the fonts that are used for the code
+  showspaces=false,                   % show spaces adding particular underscores
+  showstringspaces=false,             % underline spaces within strings
+  showtabs=false,                     % show tabs within strings adding particular underscores
+  frame=single,                       % adds a frame around the code
+  tabsize=2,                          % sets default tabsize to 2 spaces
+  breaklines=true,                    % sets automatic line breaking
+  breakatwhitespace=false,            % sets if automatic breaks should only happen at  whitespace
+  keepspaces=true,
+  literate={├}{+}1{─}{-}1{│}{|}1,     % for displaying the output of linux tree commands (utf8 char must be translated)
+}
+
+% patch for \lstinline, using xpatch
+\usepackage{xpatch}
+\makeatletter
+\xpretocmd\lstinline{\Colorbox{backcolour}\bgroup\appto\lst@DeInit{\egroup}}{}{}
+\makeatother
+
+% patch for lstlisting, using etoolbox
+\usepackage{etoolbox}
+\makeatletter
+\BeforeBeginEnvironment{lstlisting}{\begin{minipage}{\linewidth}}
+\AfterEndEnvironment{lstlisting}{\end{minipage}}
+\makeatother
+
+
+% includegraphics
+% ===============
+
+\let\AltIncludegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{\begin{center}\AltIncludegraphics[#1, max width=0.8\linewidth]{#2}\end{center}}
+
+
+% Content rendring
+% ================
+
+% List customization
+\renewcommand{\labelitemi}{\textsc{---}}
+
+\makeatletter
+\renewcommand{\@listI}{%
+\leftmargin=20pt
+\rightmargin=0pt
+\labelsep=5pt
+\itemindent=0pt
+\topsep=0pt plus 2pt minus 4pt
+\partopsep=0pt plus 1pt minus 1pt
+\parsep=0pt plus 1pt
+\itemsep=\parsep}
+\makeatother
+
+% Links customization
+\usepackage{hyperref}
+\definecolor{urlcolor}{RGB}{225,30,56}
+\hypersetup{colorlinks,breaklinks,urlcolor=urlcolor}
+
+% Paragraph
+\setlength{\parindent}{0pt}  % no indent
+\setlength{\parskip}{5pt}    % space between paragraphs
+
+
+[% options.document_type = 'article' %]
+
+\title{[% title %]}
+\date{[% strftime("%A %d %B %Y") %]}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+
+[% FOR page IN pages %]
+	[% IF loop.first and loop.last %]
+		[% page.content %]
+	[% ELSE %]
+		[% page.content %]
+	[% END %]
+[% END %]
+
+\end{document}
